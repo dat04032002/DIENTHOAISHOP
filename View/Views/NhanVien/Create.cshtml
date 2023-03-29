@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "_admin";
+}
+
+<h2>Create</h2>
+
+
+<style>
+    #mota {
+        height: 100px
+    }
+</style>
+<div class="modal-body">
+    <form>
+        <div class="form-group" style="display:none">
+            <label for="ID">Id Nhân Viên </label>
+            <input type="text" class="form-control" id="ID" placeholder="Id" disabled="disabled" />
+        </div>
+
+        <div class="form-group">
+            <label for="UsernName">Tên Nhân Viên</label>
+            <input type="text" class="form-control" id="tennhanvien" />
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Ngày Sinh</label>
+            <input type="date" class="form-control" id="ngaysinh" />
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Số CCCD</label>
+            <input type="text" class="form-control" id="cccd" />
+        </div>
+        <div class="form-group">
+            <label for="FullName">Số Điện Thoại </label>
+            <input type="text" class="form-control" id="sdt" />
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Địa chỉ</label>
+            <input type="text" class="form-control" id="diachi" />
+        </div>
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Trạng thái làm việc</label>
+            <input type="radio" name="trangthai" id="danglam" style="width: 40px; height: 16px; " value="0" /><p>Đang làm việc</p>
+            <input type="radio" name="trangthai" id="nghiviec" style="width: 40px; height: 16px;" value="1" /><p>Đã nghỉ việc</p>
+        </div>
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Chức Vụ</label>
+            <input type="radio" name="chucvu" id="quanly" style="width: 40px; height: 16px; " value="0" /><p>Quản lý</p>
+            <input type="radio" name="chucvu" id="banhang" style="width: 40px; height: 16px;" value="1" /><p>Nhân viên bán hàng</p>
+            <input type="radio" name="chucvu" id="giaohang" style="width: 40px; height: 16px; " value="2" /><p>Nhân viên giao hàng</p>
+
+        </div>
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Giới Tính</label>
+            <input type="radio" name="gioitinh" id="nam" style="width: 40px; height: 16px; " value="0" /><p>Nam</p>
+            <input type="radio" name="gioitinh" id="nu" style="width: 40px; height: 16px;" value="1" /><p>Nữ</p>
+        </div>
+    </form>
+</div>
+
+<div>
+    <button type="button" class="btn btn-default" id="btnAdd" onclick="Index()">Trở lại</button>
+    <button type="button" class="btn btn-primary" id="btnUpdate" onclick="Them()">Thêm Mới</button>
+
+</div>
+<script>
+   function Index() {
+        window.location.replace("/NhanVien/Index")
+    }
+ 
+    function Them() {
+
+        var tinhtrang = $("input[name='trangthai']:checked").val();
+        var chucvu = $("input[name='chucvu']:checked").val();
+        var gioitinh = $("input[name='gioitinh']:checked").val();
+
+            var obj = {
+                id: $('#ID').val(),
+                tenNHanVien: $('#tennhanvien').val(),
+                ngaySinh: $('#ngaysinh').val(),
+                cccd: $('#cccd').val(),
+                sdt: $('#sdt').val(),
+                diaChi: $('#diachi').val(),
+                gioiTinh:gioitinh,
+                tinhTrang:tinhtrang,
+                chucVu:chucvu
+
+            }
+
+
+        console.log(JSON.stringify(obj))
+          $.ajax({
+              url: 'https://localhost:44355/NhanVien/Themnv/',
+              data: JSON.stringify(obj),
+              type: "Post",
+              async: true,
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+              success: function (abc) {
+                  var data = JSON.parse(abc);
+                  if (data == "") {
+                      alert("Thêm không thành công")
+                  } else {
+                      alert("Thêm thành công")
+                      Index();
+                  }
+
+            }
+        })
+    }
+
+</script>

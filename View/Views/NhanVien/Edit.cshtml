@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_admin.cshtml";
+}
+
+
+
+<style>
+    #mota {
+        height: 100px
+    }
+</style>
+<div class="modal-body">
+    <form>
+        <div class="form-group" style="display:none">
+            <label for="ID">Id Nhân Viên </label>
+            <input type="text" class="form-control" id="ID" placeholder="Id" disabled="disabled" />
+        </div>
+
+        <div class="form-group">
+            <label for="UsernName">Tên Nhân Viên</label>
+            <input type="text" class="form-control" id="tennhanvien" />
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Ngày Sinh</label>
+            <input type="date" class="form-control" id="ngaysinh" />
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Số CCCD</label>
+            <input type="text" class="form-control" id="cccd" />
+        </div>
+        <div class="form-group">
+            <label for="FullName">Số Điện Thoại </label>
+            <input type="text" class="form-control" id="sdt" />
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Địa chỉ</label>
+            <input type="text" class="form-control" id="diachi" />
+        </div>
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Trạng thái làm việc</label>
+            <input type="radio" name="trangthai" id="danglam" style="width: 40px; height: 16px; " value="0" /><p>Đang làm việc</p>
+            <input type="radio" name="trangthai" id="nghiviec" style="width: 40px; height: 16px;" value="1" /><p>Đã nghỉ việc</p>
+        </div>
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Chức Vụ</label>
+            <input type="radio" name="chucvu" id="quanly" style="width: 40px; height: 16px; " value="0" /><p>Quản lý</p>
+            <input type="radio" name="chucvu" id="banhang" style="width: 40px; height: 16px;" value="1" /><p>Nhân viên bán hàng</p>
+            <input type="radio" name="chucvu" id="giaohang" style="width: 40px; height: 16px; " value="2" /><p>Nhân viên giao hàng</p>
+
+        </div>
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Giới Tính</label>
+            <input type="radio" name="gioitinh" id="nam" style="width: 40px; height: 16px; " value="0" /><p>Nam</p>
+            <input type="radio" name="gioitinh" id="nu" style="width: 40px; height: 16px;" value="1" /><p>Nữ</p>
+        </div>
+    </form>
+</div>
+
+<div>
+    <button type="button" class="btn btn-default" id="btnAdd" onclick="Index()">Trở lại</button>
+    <button type="button" class="btn btn-primary" id="btnUpdate" onclick="Update()">Update</button>
+
+</div>
+
+<script type="text/javascript">
+   function Index() {
+        window.location.replace("/NhanVien/Index")
+    }
+   $(function () {
+       var id =@ViewBag.id
+           $.ajax({
+
+               url: "/NhanVien/GetNhanVienByID/" + id,
+               data:id,
+               typr: "GET",
+               contentType: "application/json;charset=UTF-8",
+               dataType: "json",
+               success: function (abc)
+               {
+
+                   var data = JSON.parse(abc);
+
+                   var today = new Date(data.ngaySinh)
+                   var dd = today.getDate();
+                   var mm = today.getMonth() + 1; //January is 0!
+
+                   var yyyy = today.getFullYear();
+                   if (dd < 10) { dd = '0' + dd }
+                   if (mm < 10) { mm = '0' + mm }
+                   today = yyyy + '-' + mm + '-' + dd;
+
+                   console.log(data)
+                   $('#ID').val(data.id);
+                   $('#tennhanvien').val(data.tenNHanVien);
+                   $('#ngaysinh').val(today);
+                   $('#cccd').val(data.cccd);
+                   $('#sdt').val(data.sdt);
+                   $('#diachi').val(data.diaChi);
+                   if (data.tinhTrang == '0') {
+                       $('#danglam').prop("checked", true)
+                   } else {
+                       $('#nghiviec').prop("checked", true)
+                   }
+                    if (data.gioiTinh == '0') {
+                                $('#nam').prop("checked", true)
+                    } else {
+                        $('#nu').prop("checked", true)
+                   }
+                   if (data.chucVu == '0') {
+                       $('#quanly').prop("checked", true)
+                   } else if (data.chucVu == '1') {
+                       $('#banhang').prop("checked", true)
+                   } else {
+                       $('#giaohang').prop("checked", true)
+                   }
+
+
+               }
+
+           });
+
+
+
+   });
+    
+    function Update() {
+
+        var tinhtrang = $("input[name='trangthai']:checked").val();
+        var chucvu = $("input[name='chucvu']:checked").val();
+        var gioitinh = $("input[name='gioitinh']:checked").val();
+      
+            var obj = {
+                id: $('#ID').val(),
+                tenNHanVien: $('#tennhanvien').val(),
+                gioiTinh: gioitinh,
+                
+                cccd: $('#cccd').val(),
+                sdt: $('#sdt').val(),
+                diaChi: $('#diachi').val(),
+                ngaySinh: $('#ngaysinh').val(),
+                  chucVu: chucvu,
+                tinhTrang: tinhtrang
+            }
+        
+
+        console.log(JSON.stringify(obj))
+          $.ajax({
+            url: 'https://localhost:7088/NhanVien/Updatenv',
+              data: obj,
+              typr: "Post",
+              async: true,
+            contentType: "application/json;charset=utf-8",
+              dataType: "json",
+              success: function (abc) {
+                  var data = JSON.parse(abc);
+                  alert(data)
+                  if (data=="") {
+                      alert("sửa không thành công")
+                  } else {
+                      alert("sửa thành công")
+                      
+                  }
+             //   Index();
+            }
+        })
+    }
+
+</script>
+
+
+
+

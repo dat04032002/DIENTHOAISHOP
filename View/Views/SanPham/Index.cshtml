@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_admin.cshtml";
+
+}
+
+<style>
+    .mgr {
+        margin-right: 40px
+    }
+</style>
+<h2>Sản Phẩm</h2>
+
+
+
+
+<p style="border:#333 solid 2px; width:70px; ">
+    <b>@Html.ActionLink("Thêm Mới", "Create")</b>
+</p>
+<div class="form-check">
+    <h2>Lọc</h2>
+    <form class="d-flex" id="loc">
+        <div class="mgr">
+            <div class="form-group">
+                <label for="UsernName">Tên Sản Phẩm</label>
+                <input type="text" class="form-control" id="tensanpham" />
+            </div>
+            <div class="form-group">
+                <label for="UsernName">Loại</label>
+                <input type="text" class="form-control" id="loai" />
+            </div>
+            <div class="form-group">
+                <label for="UsernName">Hãng</label>
+                <input type="text" class="form-control" id="hang" />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label for="Phone">Giá Bán</label>
+                <input type="number" class="form-control" id="giaban" />
+            </div>
+            <div class="form-group" style=" display:flex">
+                <label for="Active">Trạng thái</label>
+                <input type="radio" name="trangthai" id="ban" style="width: 40px; height: 16px; " value="0" /><p>Đang Bán</p>
+                <input type="radio" name="trangthai" id="ngung" style="width: 40px; height: 16px;" value="1" /><p>Ngừng Bán</p>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" id="btnUpdate" onclick="Update()">Lọc</button>
+
+            </div>
+        </div>
+    </form>
+
+
+</div>
+<div id="b"> </div>
+<table class="table" id="a">
+    @*<thead>
+            <tr class="ten">
+                <th>
+                    Tên Sản Phẩm
+                </th>
+                <th>
+                    Ảnh
+                </th>
+                <th>
+                    Đơn giá
+                </th>
+                <th>
+                    Khuyến Mãi
+                </th>
+                <th>
+                    Giá Bán
+                </th>
+                <th>
+                    Mô Tả
+                </th>
+                <th>
+                    Loại Sản phẩm
+                </th>
+                <th>
+                    Hãng Sản xuất
+                </th>
+
+                <th>
+                    Kho
+                </th>
+                <th>
+                    Trạng Thái
+                </th>
+
+            </tr>
+        </thead>
+        <tbody class="tbody">
+        </tbody>
+    *@
+</table>
+<link href="https://cdn.datatables.net/v/dt/dt-1.10.19/datatables.min.css" rel="stylesheet" />
+
+<script src="https://cdn.datatables.net/v/dt/dt-1.10.19/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        LoadData()
+
+    });
+    var columnsname = [
+
+        {
+            orderable: false,
+            title: "Tên Sản Phẩm",
+            data: "tenSanPham" // khai báo đúng tên biến trong object
+        },
+        {
+            data: "anh", // khai báo đúng tên biến trong object
+            title: "Ảnh Sản Phẩm",
+            render: function (data, type, row) {
+                return "<img " + "src=" + `"/lib/image/${data}"` + `width="${100}""` + " /> ";
+            },
+            "orderable": false,
+        },
+        {
+            orderable: false,
+            title: "Giá Gốc ",
+            data: "donGia" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Khuyến Mãi",
+            data: "khuyenMai" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Giá Bán ",
+            data: "giaBan" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Loại Sản Phẩm ",
+            data: "loaiSp" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Hãng Sản Xuất ",
+            data: "hang" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Mô Tả ",
+            data: "moTa" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Trạng thái ",
+            data: "getTrangThai" // khai báo đúng tên biến trong object
+        },
+        {
+            orderable: false,
+            title: "Hoạt Động ",
+            data: "id",// khai báo đúng tên biến trong object
+            render: function (data, type, row) {
+                return (
+                    `<a href="/SanPham/Details/${data}">Details</a>` + "||" +
+                    `<a href="/SanPham/Edit/${data}">Edit</a>` + "||" +
+                    `<a href="/SanPham/Delete/${data}">Ngừng bán</a>`);
+            },
+        },
+
+    ]
+
+    function LoadData() {
+      
+        $.ajax({
+            url: "/SanPham/GetSanPham",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (abc) {
+              
+                result = JSON.parse(abc);
+               
+                var data = result.map(item => {
+                    return { ...item, "ma": item.id }
+                })
+             
+                let ListCatalogTable = $('#a').dataTable({
+                    destroy: true,
+                    data: result,
+                    columns: columnsname,
+                    searching: false,
+                    ordering: false,
+                    pageLength: 10,
+                    lengthChange: false,
+
+                });
+                /*    var html = ''
+                    result.forEach(function (item) {
+
+                            html += ("<tr>" +
+                                "<td>" + item.tenSanPham + "</td>"
+                                + "<td>" + "<img " + "src=" + `"/image/${item.anh}"` + `width="${100}""` + " /> " + "</td>"
+                                + "<td>" + item.donGia + "</td>" +
+
+                                "<td>" + item.khuyenMai + "</td>" +
+                                "<td>" + item.giaBan + "</td>" +
+                                "<td>" + item.moTa + "</td>" +
+                                "<td>" + item.loaiSp + "</td>" +
+                                "<td>" + item.hang + "</td>" +
+
+                                "<td>" + item.kho + "</td>" +
+                                "<td>" + item.getTrangThai + "</td>" +
+                                " <td>" +
+
+                                `<a href="/SanPham/Details/${item.id}">Details</a>` + "||" +
+                                `<a href="/SanPham/Edit/${item.id}">Edit</a>` + "||" +
+                                `<a href="/SanPham/Delete/${item.id}">Ngừng bán</a>`
+                                + "</td>" +
+                                "</tr>"
+
+                            );
+
+                    });
+                    $('.tbody').html(html);*/
+            }
+        });
+
+    };
+    function Update() {
+
+        var trangthai = $("input[name='trangthai']:checked").val();
+
+        var obj = {
+
+            tenSanPham: $('#tensanpham').val(),
+
+            giaBan: $('#giaban').val(),
+
+            hang: $('#hang').val(),
+            loaiSp: $('#loai').val(),
+
+            trangThai: trangthai,
+
+        }
+
+
+        console.log(JSON.stringify(obj))
+        $.ajax({
+            url: 'https://localhost:44370/SanPham/Fill/',
+            data: JSON.stringify(obj),
+            type: "POST",
+            async: true,
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (abc) {
+                result = JSON.parse(abc);
+                console.log(result)
+                let ListCatalogTable = $('#a').dataTable({
+                    destroy: true,
+                    data: result,
+                    columns: columnsname,
+                    searching: false,
+                    ordering: false,
+                    pageLength: 10,
+                    lengthChange: false,
+
+                }); 
+            }
+        })
+    }
+</script>
+
+
+

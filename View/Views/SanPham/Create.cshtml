@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_admin.cshtml";
+}
+<style>
+    #mota {
+        height: 100px
+    }
+</style>
+<h2>Create</h2>
+<div class="modal-body">
+
+    <div class="form-group" style="display:none">
+        <label for="ID">Id Sản Phẩm </label>
+        <input type="text" class="form-control" id="ID" placeholder="Id" disabled="disabled" />
+    </div>
+    <div class="form-group" style="display:none">
+
+        <input type="text" class="form-control" id="IDkho" disabled="disabled" />
+    </div>
+    <div class="form-group">
+        <label for="UsernName">Tên Sản Phẩm</label>
+        <input type="text" class="form-control" id="tensanpham" />
+    </div>
+    <div class="form-group">
+        <label for="UsernName">Loại</label>
+        <input type="text" class="form-control" id="loai" />
+    </div>
+    <div class="form-group">
+        <label for="UsernName">Hãng</label>
+        <input type="text" class="form-control" id="hang" />
+    </div>
+    <div class="form-group" id="btnPass">
+        <label>Ảnh Sản Phẩm</label>
+        <img src="" width="100" id="anhshow" />
+
+        <form id="formanh" enctype="multipart/form-data">
+            <input type="file" name="fileMode" />
+        </form>
+
+
+    </div>
+    <div class="form-group">
+        <label for="FullName">Đơn Giá </label>
+        <input type="number" class="form-control" id="dongia" />
+    </div>
+    <div class="form-group">
+        <label for="Email">Khuyến mãi</label>
+        <input type="number" class="form-control" id="khuyenmai" max="100" min="0" />
+    </div>
+    <div class="form-group">
+        <label for="Phone">Giá Bán</label>
+        <input type="number" class="form-control" id="giaban" />
+    </div>
+    <div class="form-group">
+        <label for="Phone">Số Lượng</label>
+        <input type="number" class="form-control" id="soluong" />
+    </div>
+    <div class="form-group">
+        <label for="Position">Mô tả</label>
+        <textarea type="text" class="form-control" id="mota"></textarea>
+    </div>
+    <div class="form-group" style=" display:flex">
+        <label for="Active">Trạng thái</label>
+        <input type="radio" name="trangthai" id="ban" style="width: 40px; height: 16px; " value="0" /><p>Đang Bán</p>
+        <input type="radio" name="trangthai" id="ngung" style="width: 40px; height: 16px;" value="1" /><p>Ngừng Bán</p>
+    </div>
+    <div class="form-group">
+        <label for="UsernName">Kho</label>
+        <input type="hidden" class="form-control" id="kho" />
+    </div>
+
+</div>
+<div>
+    <button type="button" class="btn btn-default" id="btnAdd" onclick="Index()">Trở lại</button>
+    <button type="button" class="btn btn-primary" id="btnUpdate" onclick="Update()">Thêm</button>
+
+</div>
+<script>
+    function Index() {
+        window.location.replace("/SanPham/Index")
+    }
+
+    function Update() {
+        var image = upimage();
+        console.log(image);
+        var trangthai = $("input[name='trangthai']:checked").val();
+        if (image != undefined) {
+            var obj = {
+                id: 0,
+                tenSanPham: $('#tensanpham').val(),
+                khuyenMai: $('#khuyenmai').val(),
+                donGia: $('#dongia').val(),
+                giaBan: $('#giaban').val(),
+                moTa: $('#mota').val(),
+                hang: $('#hang').val(),
+                loaiSp: $('#loai').val(),
+                kho: $('#kho').val(),
+                idKho: 1,
+                anh: image,
+                trangThai: trangthai,
+                soLuong: $('#soluong').val()
+
+            }
+        }
+
+        console.log(JSON.stringify(obj))
+          $.ajax({
+              url: 'https://localhost:44370/SanPham/InsertSP/',
+              data: JSON.stringify(obj),
+              type: "Post",
+              async: true,
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+            success: function () {
+                alert("Thêm thành công")
+                Index();
+            }
+        })
+    }
+    function upimage() {
+
+        var img;
+
+        $.ajax({
+            url: 'https://localhost:44313/api/SanPham/anh',
+            data: new FormData($('form')[0]),
+            method: 'POST',
+            cache: false,
+            async: false,
+            contentType: false,
+            processData: false,
+
+
+
+            success: function (data) {
+                img = data;
+                console.log(img)
+
+            }
+        });
+        return img;
+    }
+</script>
+

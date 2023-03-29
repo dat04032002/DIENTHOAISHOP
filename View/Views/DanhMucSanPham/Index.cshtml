@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "_admin";
+}
+
+<h2>Index</h2>
+
+
+<p style="border:#333 solid 2px; width:70px; ">
+    <b>@Html.ActionLink("Thêm Mới", "Create")</b>
+</p>
+
+<table class="table">
+    <thead>
+        <tr class="ten">
+            <th>
+                Loại Sản Phẩm
+            </th>
+            <th>
+                Hãng Sản Xuất
+            </th>
+
+        </tr>
+    </thead>
+    <tbody class="tbody">
+    </tbody>
+
+</table>
+<script>
+    $(document).ready(function () {
+        LoadData()
+
+    });
+
+    function LoadData() {
+        $.ajax({
+            url: "/DanhMucSanPham/Get",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                result = JSON.parse(result);
+                var html = ''
+                result.forEach(function (item) {
+                    var loai;
+                    if (item.loai == "PHUKIEN") {
+                        loai = " Phụ Kiện"
+                    } else {
+                        loai="Điện Thoại"
+                    }
+                    html += ("<tr>" +
+                        "<td>" + loai + "</td>"
+
+                        + "<td>" + item.hangSx + "</td>" +
+
+
+
+                        " <td>" +
+
+                        `<a href="/DanhMucSanPham/Details/${item.id}">Details</a>` + "||" +
+                        `<a href="/DanhMucSanPham/Edit/${item.id}">Edit</a>`
+                        + "</td>" +
+                        "</tr>"
+
+                    );
+
+                });
+                $('.tbody').html(html);
+            }
+        });
+
+    };
+   
+</script>
+
+
+

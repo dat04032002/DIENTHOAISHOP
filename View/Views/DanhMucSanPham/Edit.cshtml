@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    Layout = "_admin";
+}
+
+
+<style>
+    #mota {
+        height: 100px
+    }
+</style>
+<div class="modal-body">
+    <form>
+        <div class="form-group" style="display:none">
+            <label for="ID">Id Danh Mục </label>
+            <input type="text" class="form-control" id="ID" placeholder="Id" disabled="disabled" />
+        </div>
+
+
+
+        <div class="form-group" style=" display:flex">
+            <label for="Active">Trạng thái làm việc</label>
+            <input type="radio" name="loai" id="dienthoai" style="width: 40px; height: 16px; " value="DIENTHOAI" /><p>Điện Thoại</p>
+            <input type="radio" name="loai" id="phukien" style="width: 40px; height: 16px;" value="PHUKIEN" /><p>Phụ Kiện</p>
+        </div>
+        <div class="form-group">
+            <label for="UsernName">Hãng Sản Xuất</label>
+            <input type="text" class="form-control" id="hang" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <button type="button" class="btn btn-default" id="btnAdd" onclick="Index()">Trở lại</button>
+    <button type="button" class="btn btn-primary" id="btnUpdate" onclick="Update()">Update</button>
+
+</div>
+<script>
+ function Index() {
+        window.location.replace("/DanhMucSanPham/Index")
+    }
+   $(function () {
+       var id =@ViewBag.id
+           $.ajax({
+
+               url: "/DanhMucSanPham/GetByID/" + id,
+               data:id,
+               typr: "GET",
+               contentType: "application/json;charset=UTF-8",
+               dataType: "json",
+               success: function (abc)
+               {
+
+                   var data = JSON.parse(abc);
+
+
+                   $('#ID').val(data.id);
+                   $('#hang').val(data.hangSx);
+
+                   if (data.loai == 'DIENTHOAI') {
+                       $('#dienthoai').prop("checked", true)
+                   } else {
+                       $('#phukien').prop("checked", true)
+                   }
+
+
+
+               }
+
+           });
+
+
+
+   });
+
+    function Update() {
+
+        var loai = $("input[name='loai']:checked").val();
+
+
+            var obj = {
+                id: $('#ID').val(),
+                 loai: loai,
+                hangSx: $('#hang').val(),
+
+
+
+            }
+
+
+        console.log(JSON.stringify(obj))
+          $.ajax({
+              url: 'https://localhost:44370/DanhMucSanPham/Update/',
+              data: JSON.stringify(obj),
+              type: "Post",
+              async: true,
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+              success: function (abc) {
+                  var data = JSON.parse(abc);
+                  if (data == "") {
+                      alert("sửa không thành công")
+                  } else {
+                      alert("sửa thành công")
+                      Index();
+                  }
+
+            }
+        })
+    }
+
+</script>
+
+
+
+
+
+

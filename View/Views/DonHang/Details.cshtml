@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "_admin";
+}
+
+
+
+<style>
+    dd {
+        margin-left: 300px;
+        font-size: 20px
+    }
+</style>
+<h2>Details</h2>
+<div>
+    <dl class="">
+        <dt class="ma">
+            Mã Đơn Hàng
+        </dt>
+        <dt class="ten">
+            Tên Khách Hàng
+
+        </dt>
+
+        <dt class="sdt">
+            Số Điện Thoại
+
+        </dt>
+        <dt class="diachi">
+            Địa Chỉ
+
+        </dt>
+
+        <dt class="tong">
+            Tổng Tiền
+        </dt>
+        <dt class="ngay">
+            Ngày Tạo
+        </dt>
+        <dt class="tinhtrang">
+            Tình Trạng Đơn Hàng
+        </dt>
+
+
+
+    </dl>
+    <table class="table">
+        <thead>
+            <tr class="">
+                <th>
+                    STT
+                </th>
+                <th>
+                    Tên Sản Phẩm
+                </th>
+
+                <th>
+                    Giá Gốc
+                </th>
+                <th>
+                    Khuyến Mãi
+                </th>
+                <th>
+                    Giá Bán
+                </th>
+                <th>
+                   Bảo Hành
+                </th>
+             
+
+            </tr>
+        </thead>
+        <tbody class="tbody">
+        </tbody>
+
+    </table>
+    <button type="button" class="btn btn-default" id="btnAdd" onclick="Index()">Trở lại</button>
+    <button type="button" class="btn btn-primary" id="btnUpdate" onclick="XacNhan()">Update</button>
+</div>
+<p>
+
+</p>
+<script>
+    function Index() {
+        window.location.replace("/DonHang/Index")
+    }
+    $(document).ready(function () {
+        Load();
+        LoadData()
+
+    });
+
+
+    function Load() {
+        var iddh=@ViewBag.id;
+
+       console.log(iddh)
+           $.ajax({
+
+               url: "https://localhost:44370/DonHang/GetByID/" + iddh,
+               data:@ViewBag.id ,
+               typr: "GET",
+               contentType: "application/json;charset=utf-16",
+               dataType: "json",
+               success: function (abc)
+               {
+                   var data = JSON.parse(abc);
+
+                   var nowDate = new Date(data.ngayBan)
+                   var ngayban = nowDate.getDate() + '/' + (nowDate.getMonth() + 1) + '/' + nowDate.getFullYear();
+                   $(".ma").after(
+                       "<dd>" + data.id + "</dd>"
+                   );
+                   $(".ten").after(
+                       "<dd>" + data.tenKH + "</dd>"
+                   );
+                   $(".ngay").after(
+                       "<dd>" + ngayban + "</dd>");
+
+                   $(".sdt").after(
+                       "<dd>" + data.khachHangSDT + "</dd>"
+                   );
+                   $(".diachi").after(
+                       "<dd>" + data.diaChi + "</dd>"
+                   );
+                   $(".tong").after(
+                       "<dd>" + data.tongTien + "</dd>"
+                   );
+                   $(".tinhtrang").after(
+                       "<dd>" + data.trangThaiGetName + "</dd>"
+                   );
+
+               }
+
+           });
+
+    }
+    function LoadData() {
+        var iddh=@ViewBag.id;
+        $.ajax({
+            url: "/DonHang/GetChiTiet/"+iddh,
+             data:@ViewBag.id ,
+               typr: "GET",
+               contentType: "application/json;charset=utf-16",
+               dataType: "json",
+            success: function (result) {
+                result = JSON.parse(result);
+                var html = ''
+                var stt=0
+                result.forEach(function (item) {
+                    stt+=1
+                    var nowDate = new Date(item.baoHanh)
+                    var baohanh = nowDate.getDate() + '/' + (nowDate.getMonth() + 1) + '/' + nowDate.getFullYear();
+                    var edit = "";
+                    if (item.trangThai == 0) {
+                        edit += "||" + `<a href="/DonHang/Edit/${item.id}">Xác Nhận Đơn  Hàng</a>`
+                    }
+                    html += ("<tr>" +
+                        "<td>" + stt + "</td>"
+
+                        + "<td>" + item.tenSP + "</td>" +
+
+                        "<td>" + item.giaGoc + "</td>" +
+                        "<td>" + item.giamGia + "</td>" +
+                        "<td>" + item.giaBan + "</td>" +
+                        "<td>" + baohanh + "</td>" +
+
+
+                        "</tr>"
+
+                    );
+
+                });
+                $('.tbody').html(html);
+            }
+        });
+
+    };
+</script>
+
+
+

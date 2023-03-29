@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_admin.cshtml";
+}
+
+<style>
+    dd {
+        margin-left: 300px;
+        font-size:20px
+    }
+    
+</style>
+<h2>Details</h2>
+<div>
+    <dl class="">
+        <dt class="ten">
+            Tên Sản Phẩm
+        </dt>
+        <dt class="anh">
+            Ảnh
+
+        </dt>
+
+        <dt class="dongia">
+            Đơn giá
+
+        </dt>
+
+        <dt class="khuyenmai">
+            Khuyến Mãi
+        </dt>
+
+        <dt class="giaban">
+            Giá Bán
+
+        </dt>
+
+        <dt class="mota">
+            Mô Tả
+        </dt>
+        <dt class="loai">
+            Loại Sản phẩm
+        </dt>
+
+        <dt class="hang">
+            Hãng Sản Xuất
+        </dt>
+        <dt class="kho">
+            Kho
+        </dt>
+
+    </dl>
+    @Html.ActionLink("Trở lại", "Index")|
+    @Html.ActionLink("Sửa", "Edit", new {Id=ViewBag.id } )
+</div>
+    <p>
+
+    </p>
+    <script>
+
+   $(function () {
+       var id =@ViewBag.id
+           $.ajax({
+
+               url: "/SanPham/GetSanPhamTheoId/" + id,
+               data:id,
+               typr: "GET",
+               contentType: "application/json;charset=UTF-8",
+               dataType: "json",
+               success: function (abc)
+               {
+                   var data = JSON.parse(abc);
+                   $(".ten").after(
+                       "<dd>" + data.tenSanPham + "</dd>"
+                   );
+                   $(".anh").after(
+                       "<dd>" + "<img " + "src=" + `"~/lib/image/${data.anh}"` + `width="${100}""` + " /> " + "</dd>"
+                   );
+                   $(".dongia").after(
+                       "<dd>" + data.donGia + "</dd>"
+                   );
+                   $(".khuyenmai").after(
+                       "<dd>" + data.khuyenMai + "</dd>"
+                   );
+                   $(".giaban").after(
+                       "<dd>" + data.giaBan + "</dd>"
+                   );
+                   $(".mota").after(
+                       "<dd>" + data.moTa + "</dd>"
+                   );
+                   $(".loai").after(
+                       "<dd>" + data.loaiSp + "</dd>"
+                   );
+                   $(".hang").after(
+                       "<dd>" + data.hang + "</dd>"
+                   );
+                   $(".kho").after(
+                       "<dd>" + data.kho + "</dd>"
+                   );
+               }
+             
+           });
+
+         
+
+    });
+    </script>

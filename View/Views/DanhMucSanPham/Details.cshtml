@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "_admin";
+}
+
+
+
+<style>
+    dd {
+        margin-left: 300px;
+        font-size: 20px
+    }
+</style>
+<h2>Details</h2>
+<div>
+    <dl class="">
+        <dt class="loai">
+           Loại Sản Phẩm
+        </dt>
+        <dt class="hang">
+            Hãng Sản Xuất
+
+        </dt>
+
+    </dl>
+    @Html.ActionLink("Trở lại", "Index")|
+    @Html.ActionLink("Sửa", "Edit", new { Id = ViewBag.id })
+</div>
+<p>
+
+</p>
+<script>
+
+   $(function () {
+       var id =@ViewBag.id
+           $.ajax({
+
+               url: "/DanhMucSanPham/GetByID/" + id,
+               data:id,
+               typr: "GET",
+               contentType: "application/json;charset=UTF-8",
+               dataType: "json",
+               success: function (abc)
+               {
+                   var data = JSON.parse(abc);
+                   var loai;
+                   if (data.loai == "PHUKIEN") {
+                       loai = " Phụ Kiện"
+                   } else {
+                       loai = "Điện Thoại"
+                   }
+                   $(".loai").after(
+                       "<dd>" +loai + "</dd>"
+                   );
+                   $(".hang").after(
+                       "<dd>" + data.hangSx + "</dd>");
+                  
+
+               }
+
+           });
+
+
+
+    });
+</script>
+
+
+

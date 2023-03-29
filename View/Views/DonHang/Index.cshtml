@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "_admin";
+}
+
+
+<h2>Index</h2>
+
+<p style="border:#333 solid 2px; width:70px; ">
+    <b>@Html.ActionLink("Thêm Mới", "Create")</b>
+</p>
+
+<table class="table">
+    <thead>
+        <tr class="ten">
+            <th>
+                MÃ Đơn Hàng
+            </th>
+            <th>
+                Tên Khách Hàng
+            </th>
+
+            <th>
+                Số Điện Thoại
+            </th>
+            <th>
+                Địa Chỉ
+            </th>
+            <th>
+                Tổng Tiền
+            </th>
+            <th>
+                Ngày Tạo
+            </th>
+            <th>
+                Trạng Thái đơn Hàng
+            </th>
+
+        </tr>
+    </thead>
+    <tbody class="tbody">
+    </tbody>
+
+</table>
+<script>
+    $(document).ready(function () {
+        LoadData()
+
+    });
+
+    function LoadData() {
+        $.ajax({
+            url: "/DonHang/Get",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                result = JSON.parse(result);
+                var html = ''
+                result.forEach(function (item) {
+                    var nowDate = new Date(item.ngayBan)
+                    var ngayban = nowDate.getDate() + '/' + (nowDate.getMonth() + 1) + '/' + nowDate.getFullYear();
+                    var edit = "";
+                    var id = item.id.toString()
+
+                    console.log(id)
+                    if (item.trangThai == 0) {
+                        edit += "||" + `<a href="/DonHang/Edit/${item.id}">Xác Nhận Đơn  Hàng</a>`
+                    }
+                    html += ("<tr>" +
+                        "<td>" + item.id + "</td>"
+
+                        + "<td>" + item.tenKH + "</td>" +
+
+                        "<td>" + item.khachHangSDT + "</td>" +
+                        "<td>" + item.diaChi + "</td>" +
+                        "<td>" + item.tongTien + "</td>" +
+                        "<td>" + ngayban + "</td>" +
+
+                        "<td>" + item.trangThaiGetName + "</td>" +
+
+                        " <td>" +
+
+                        `<a href="/DonHang/Details/${id}">Xem Chi Tiết</a>` +
+                        edit
+                        + "</td>" +
+                        "</tr>"
+
+                    );
+
+                });
+                $('.tbody').html(html);
+            }
+        });
+
+    };
+ 
+</script>

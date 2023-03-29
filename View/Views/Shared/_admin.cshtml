@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - View</title>
+    
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link href="~/css/style.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    @RenderSection("head", required: false)
+    
+    @RenderSection("scripts", required: false)
+
+    <style>
+        a{
+            text-decoration:none;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+
+                    <li>@Html.ActionLink("Tổng Quan", "Index", "Home")</li>
+
+
+                    <li>@Html.ActionLink("Quản lý thông tin nhân viên", "Index", "NhanVien")</li>
+                    <li>@Html.ActionLink("Quản lý thông tin danh mục sản phẩm", "Index", "DanhMucSanPham")</li>
+                    <li>@Html.ActionLink("Quản lý thông tin sản phẩm", "Index", "SanPham")</li>
+                    <li>@Html.ActionLink("Quản lý thông tin kho", "Index", "Kho")</li>
+                    <li>@Html.ActionLink("Đơn hàng", "Index", "DonHang")</li>
+
+
+
+
+
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+
+                    <ul class="nav navbar-top-links navbar-right">
+
+
+                        <li>
+
+                            <i class="fa fa-sign-out">@Html.ActionLink("Log out", "Index", "Login")</i>
+
+                        </li>
+
+                    </ul>
+
+                </nav>
+            </div>
+            @RenderBody()
+
+
+        </div>
+
+    </div>
+
+
+</body>
+</html>

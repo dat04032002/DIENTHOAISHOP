@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "Details";
+    Layout = "_admin";
+}
+
+
+<style>
+    dd {
+        margin-left: 300px;
+        font-size: 20px
+    }
+</style>
+<h2>Details</h2>
+<div>
+    <dl class="">
+        <dt class="ten">
+            Tên Nhân Viên
+        </dt>
+        <dt class="ngaysinh">
+            Ngày Sinh
+
+        </dt>
+        <dt class="cccd">
+            Số CCCD
+
+        </dt>
+
+        <dt class="sdt">
+            Số Điện Thoại
+
+        </dt>
+
+        <dt class="gioitinh">
+            Giới Tính
+        </dt>
+
+        <dt class="diachi">
+            Địa Chỉ
+
+        </dt>
+
+        <dt class="chucvu">
+            Chức Vụ
+        </dt>
+        <dt class="tinhtrang">
+            Tình Trạng Làm Việc
+        </dt>
+
+
+
+    </dl>
+    @Html.ActionLink("Trở lại", "Index")|
+    @Html.ActionLink("Sửa", "Edit", new { Id = ViewBag.id })
+</div>
+<p>
+
+</p>
+<script>
+
+   $(function () {
+       var id =@ViewBag.id
+           $.ajax({
+
+               url: "/NhanVien/GetNhanVienByID/" + id,
+               data:id,
+               typr: "GET",
+               contentType: "application/json;charset=UTF-8",
+               dataType: "json",
+               success: function (abc)
+               {
+                   var data = JSON.parse(abc);
+                   console.log(data)
+                   var nowDate = new Date(data.ngaySinh)
+                   var ngaysinh = nowDate.getDate() + '/' + (nowDate.getMonth() + 1) + '/' + nowDate.getFullYear();
+
+                   $(".ten").after(
+                       "<dd>" + data.tenNHanVien + "</dd>"
+                   );
+                   $(".ngaysinh").after(
+                       "<dd>" + ngaysinh + "</dd>");
+                   $(".cccd").after(
+                       "<dd>" + data.cccd + "</dd>"
+                   );
+                   $(".sdt").after(
+                       "<dd>" + data.sdt + "</dd>"
+                   );
+                   $(".diachi").after(
+                       "<dd>" + data.diaChi + "</dd>"
+                   );
+                   $(".chucvu").after(
+                       "<dd>" + data.chucVuGetname + "</dd>"
+                   );
+                   $(".tinhtrang").after(
+                       "<dd>" + data.tinhTrangGetname + "</dd>"
+                   );
+                
+               }
+
+           });
+
+
+
+    });
+</script>
+
+
